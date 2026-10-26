@@ -1,32 +1,39 @@
-# React + TypeScript + Vite
+# Glowvia
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Glowvia is a responsive React, TypeScript, and Vite beauty store demo. It includes a product catalogue, search and filters, product pages, cart, wishlist, account screens, admin screens, and Supabase setup files.
 
-Currently, two official plugins are available:
+## Run it locally
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+In PowerShell, open this folder and run:
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```powershell
+npm.cmd install
+npm.cmd run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Open the local URL printed by Vite. `npm.cmd` avoids PowerShell's default script policy blocking `npm.ps1`.
+
+## Development mode
+
+Without Supabase credentials, Glowvia uses sample products and browser storage. Use the **Demo Customer** or **Demo Admin** buttons on the login page to explore the UI. These are mock identities for local demonstration only; they are not real accounts and do not provide secure authorization. Development registration is temporary and passwords are never stored in browser storage. Do not use development mode for real customer data or sales.
+
+Cart and sample order data are local demo data. Checkout is disabled when Supabase is configured because trusted server-side order creation, price calculation, and stock reservation are not implemented yet. Development payment choices never mark an order as paid.
+
+## Connect Supabase
+
+1. Create a Supabase project.
+2. Copy `.env.example` to `.env.local`.
+3. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` to the project URL and publishable/anon key.
+4. Run `supabase/migrations/20261025_init_glowvia.sql` in the Supabase SQL editor.
+5. Add an administrator role only through a trusted server-side process. Never grant it from signup metadata.
+
+The browser must only receive the publishable/anon key. Never put a service-role key in a `VITE_` variable. Supabase authentication and product reads are wired, but order creation and full admin data writes still need trusted backend integration before live use.
+
+## Checks
+
+```powershell
+npm.cmd run build
+npm.cmd run lint
+```
+
+The current lint command reports warnings, and Vite may report a large JavaScript bundle. Those are reported in the implementation handoff; the production build should still complete.
